@@ -45,3 +45,4 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 # add_subdirectory(hello-world)
+add_subdirectory(manager)
