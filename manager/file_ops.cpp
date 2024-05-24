@@ -22,7 +22,7 @@ bool read_from_binary(std::unordered_map<std::string, std::string> & stored, std
     auto delimiter_n = ciphertext_alphabet[ascii_newline];
 
     if (!input.is_open()) {
-        spdlog::info("Error opening file to read from: {}", path_to_file);
+        spdlog::error("Error opening file to read from: {}", path_to_file);
         return false;
     }
 
@@ -46,7 +46,7 @@ bool read_from_binary(std::string & contents, std::string & path_to_file)
 {
     std::ifstream input(path_to_file, std::ios::binary);
     if (!input.is_open()) {
-        spdlog::info("Error opening file to read from: {}", path_to_file);
+        spdlog::error("Error opening file to read from: {}", path_to_file);
         return false;
     }
     contents.assign(std::istreambuf_iterator<char>(input), {});
@@ -59,7 +59,7 @@ void write_to_binary(std::string & contents, std::string & path_to_file)
 {
     std::ofstream output(path_to_file, std::ios::binary);
     if (!output.is_open()) {
-        spdlog::info("Error opening file to write to: {}", path_to_file);
+        spdlog::error("Error opening file to write to: {}", path_to_file);
         exit(1);
     }
     output << contents;
@@ -76,7 +76,7 @@ void write_to_binary(std::unordered_map<std::string, std::string> & stored, std:
 
     std::ofstream output(path_to_file, std::ios::binary);
     if (!output.is_open()) {
-        spdlog::info("Error opening file to read from: {}", path_to_file);
+        spdlog::error("Error opening file to read from: {}", path_to_file);
         exit(1);
     }
     for (auto & kv : stored) {
@@ -94,7 +94,7 @@ int check_file_size(std::string & path_to_file)
     int count = 0;
 
     if (!input.is_open()) {
-        spdlog::info("Error opening file to read from: {}", path_to_file);
+        spdlog::error("Error opening file to read from: {}", path_to_file);
         return 0;
     }
     while (std::getline(input, line)) {

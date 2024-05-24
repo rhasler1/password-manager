@@ -27,6 +27,8 @@
 // 3. implement a function to change the universal universal_key -> destructive action?
 // 4. implement a function to change the master universal_key -> destructive action?
 // 5. switch char to unsigned char
+//      "this switch is going to be difficult" => can no longer use strings, will have to use
+//      vector<char>
 
 
 //after
@@ -41,8 +43,8 @@ bool valid_user_input(std::string & default_string, std::string & universal_key,
 
 int main(const int argc, const char *const argv[])
 {
-    std::string path_to_file = "/* insert path to file to store encrypted usernames and passwords */";
-    std::string path_to_key = "/* insert path to file to store encrypted universal key */";
+    std::string path_to_file = "";
+    std::string path_to_key = "";
     std::string default_string{"no entry"};
     std::string id = default_string;
     std::string username = default_string;
