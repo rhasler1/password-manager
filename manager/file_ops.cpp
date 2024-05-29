@@ -16,13 +16,12 @@ bool read_from_binary(std::unordered_map<std::string, std::string> & stored, std
     std::string line;
     std::ifstream input(path_to_file, std::ios::binary);
 
-    auto ascii_comma = 44;
-    auto ascii_newline = 10;
-    auto delimiter_c = ciphertext_alphabet[ascii_comma];
-    auto delimiter_n = ciphertext_alphabet[ascii_newline];
+    auto ascii_comma = 44;  // <username>,<password> delimiter as plaintext
+    auto ascii_newline = 10; // entry delimiter as plaintext
+    auto delimiter_c = ciphertext_alphabet[ascii_comma]; // encoded delimiter
+    auto delimiter_n = ciphertext_alphabet[ascii_newline]; // encoded delimiter
 
     if (!input.is_open()) {
-        spdlog::info("Error opening file to read from: {}", path_to_file);
         return false;
     }
 
@@ -41,12 +40,36 @@ bool read_from_binary(std::unordered_map<std::string, std::string> & stored, std
     return true;
 }
 
+// write_to_binary: write contents of unordered_map stored into path_to_file
+// entries are stored in the following format (how it would look if not encrypted):
+// <username1>,<password1>
+// <username2>,<password2>,
+// ...
+//
+bool write_to_binary(std::unordered_map<std::string, std::string> & stored, std::string & path_to_file, std::vector<char> & ciphertext_alphabet)
+{
+    auto ascii_comma = 44; // <username>,<password> delimiter as plaintext
+    auto ascii_newline = 10; // entry delimiter as plaintext
+    auto delimiter_c = ciphertext_alphabet[ascii_comma]; // encoded delimiter
+    auto delimiter_n = ciphertext_alphabet[ascii_newline]; // encoded delimiter
+
+    std::ofstream output(path_to_file, std::ios::binary);
+    if (!output.is_open()) {
+        return false;
+    }
+    for (auto & kv : stored) { 
+    //    std::cout << kv.first << "," << kv.second << std::endl; // prints the entry to terminal
+        output << kv.first << delimiter_c << kv.second << delimiter_n;
+    }
+    output.close();
+    return true;
+}
+
 //read_from_binary: read contents of path_to_file to string
 bool read_from_binary(std::string & contents, std::string & path_to_file)
 {
     std::ifstream input(path_to_file, std::ios::binary);
     if (!input.is_open()) {
-        spdlog::info("Error opening file to read from: {}", path_to_file);
         return false;
     }
     contents.assign(std::istreambuf_iterator<char>(input), {});
@@ -55,35 +78,15 @@ bool read_from_binary(std::string & contents, std::string & path_to_file)
 }
 
 // write_to_binary: write contents of string into path_to_file
-void write_to_binary(std::string & contents, std::string & path_to_file)
+bool write_to_binary(std::string & contents, std::string & path_to_file)
 {
     std::ofstream output(path_to_file, std::ios::binary);
     if (!output.is_open()) {
-        spdlog::info("Error opening file to write to: {}", path_to_file);
-        exit(1);
+        return false;
     }
     output << contents;
     output.close();
-}
-
-// write_to_binary: write contents of unordered_map stored into path_to_file
-void write_to_binary(std::unordered_map<std::string, std::string> & stored, std::string & path_to_file, std::vector<char> & ciphertext_alphabet)
-{
-    auto ascii_comma = 44;
-    auto ascii_newline = 10;
-    auto delimiter_c = ciphertext_alphabet[ascii_comma];
-    auto delimiter_n = ciphertext_alphabet[ascii_newline];
-
-    std::ofstream output(path_to_file, std::ios::binary);
-    if (!output.is_open()) {
-        spdlog::info("Error opening file to read from: {}", path_to_file);
-        exit(1);
-    }
-    for (auto & kv : stored) {
-        std::cout << kv.first << "," << kv.second << std::endl;
-        output << kv.first << delimiter_c << kv.second << delimiter_n;
-    }
-    output.close();
+    return true;
 }
 
 // check_file_size: read the contents of path_to_file and count characters
@@ -94,7 +97,6 @@ int check_file_size(std::string & path_to_file)
     int count = 0;
 
     if (!input.is_open()) {
-        spdlog::info("Error opening file to read from: {}", path_to_file);
         return 0;
     }
     while (std::getline(input, line)) {

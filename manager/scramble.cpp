@@ -48,19 +48,21 @@ std::vector<char> unscramble(std::string keyword, const int character_base, cons
 {
     remove_duplicates(keyword);
     const auto keyword_size = keyword.size();
-    auto counter_key = 0;
     auto counter_not = keyword_size;
     char character;
     std::vector<char> plaintext_alphabet;
 
     for (int i = character_base; i < (character_range + character_base); i++) {
         char index_char = char(i);
-        if (keyword.find(index_char) == -1) {
+        auto found = std::find_if(keyword.begin(), keyword.end(), [&index_char](char c) {
+            return c == index_char;
+        });
+        if (found == keyword.end()) {
             character = char(counter_not++);
             plaintext_alphabet.push_back(character);
         }
         else {
-            character = char(counter_key++);
+            character = std::distance(keyword.begin(), found);
             plaintext_alphabet.push_back(character);
         }
     }

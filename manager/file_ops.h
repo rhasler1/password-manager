@@ -7,20 +7,20 @@ bool read_from_binary(
     std::vector<char> & ciphertext_alphabet
 );
 
+bool write_to_binary(
+    std::unordered_map<std::string, std::string> & stored,
+    std::string & path_to_file,
+    std::vector<char> & ciphertext_alphabet
+);
+
 bool read_from_binary(
     std::string & contents,
     std::string & path_to_file
 );
 
-void write_to_binary(
+bool write_to_binary(
     std::string & contents,
     std::string & path_to_file
-);
-
-void write_to_binary(
-    std::unordered_map<std::string, std::string> & stored,
-    std::string & path_to_file,
-    std::vector<char> & ciphertext_alphabet
 );
 
 int check_file_size(
